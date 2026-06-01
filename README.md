@@ -21,14 +21,13 @@ El valor del contador es global: se comparte entre todas las sesiones abiertas y
 
 - [Node.js](https://nodejs.org/) v18+
 - [Docker](https://www.docker.com/) (para la base de datos local y realtime de supabase)
-- [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started)
 
 ## Inicialización local
 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone git@github.com:gonzalosuarez2001/challenge.git
+git clone https://github.com/gonzalosuarez2001/challenge.git
 cd challenge
 ```
 
@@ -46,7 +45,7 @@ Instala dependencias y genera el Prisma Client.
 npm run up
 ```
 
-Levanta Supabase con Docker, aplica el schema, habilita realtime y arranca Next.js en [http://localhost:3000](http://localhost:3000).
+Levanta Supabase con Docker, aplica el schema, habilita Realtime, registra el cron de reset automático (pg_cron cada minuto) y arranca Next.js en [http://localhost:3000](http://localhost:3000).
 
 ### 4. Eliminar el entorno local
 
