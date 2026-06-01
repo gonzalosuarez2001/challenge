@@ -113,10 +113,9 @@ export default function Counter({ initial }: { initial: CounterData }) {
         <div
           role="status"
           aria-label={`Counter value: ${optimisticValue}`}
-          className="font-mono text-9xl font-bold tracking-tight text-zinc-50 transition-opacity duration-150 motion-reduce:transition-none select-none"
+          className={`${isPending ? "opacity-50" : "opacity-100"} font-mono text-9xl font-bold tracking-tight text-zinc-50 transition-opacity duration-150 motion-reduce:transition-none select-none`}
           style={{
             fontVariantNumeric: "tabular-nums",
-            opacity: isPending ? 0.5 : 1,
           }}
         >
           {optimisticValue}
