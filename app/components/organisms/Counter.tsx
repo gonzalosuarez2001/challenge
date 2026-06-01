@@ -26,26 +26,16 @@ export default function Counter({ initial }: { initial: CounterData }) {
   const [isMounted, setIsMounted] = useState(false);
   const [optimisticValue, setOptimisticValue] = useState(initial.value);
 
-  const onExpireRef = useRef<() => void>(() => {});
-  
-  onExpireRef.current = () => {
-    if (optimisticValue === 0) return;
-    setOptimisticValue(0);
-    startTransition(async () => {
-      try {
-        await resetCounter();
-      } catch {
-        setOptimisticValue(counterValue);
-      }
-    });
-  };
+  const counterValueRef = useRef(counterValue);
+  counterValueRef.current = counterValue;
+  const optimisticValueRef = useRef(optimisticValue);
+  optimisticValueRef.current = optimisticValue;
 
   const expiryTimestamp = lastUpdatedAt.clone().add(20, "minutes").toDate();
 
   const { minutes, seconds, restart } = useTimer({
     expiryTimestamp,
     autoStart: true,
-    onExpire: () => onExpireRef.current(),
   });
 
   const remainingSeconds = minutes * 60 + seconds;
@@ -78,6 +68,18 @@ export default function Counter({ initial }: { initial: CounterData }) {
   useEffect(() => {
     restart(lastUpdatedAt.clone().add(20, "minutes").toDate());
   }, [lastUpdatedAt]);
+
+  useEffect(() => {
+    if (!isMounted || remainingSeconds !== 0 || optimisticValueRef.current === 0) return;
+    setOptimisticValue(0);
+    startTransition(async () => {
+      try {
+        await resetCounter();
+      } catch {
+        setOptimisticValue(counterValueRef.current);
+      }
+    });
+  }, [remainingSeconds, isMounted]);
 
   useEffect(() => {
     setIsMounted(true);
