@@ -97,6 +97,7 @@ export default function Counter({ initial }: { initial: CounterData }) {
               last_updated_at: string;
             };
             setCounterValue(row.value);
+            setOptimisticValue(row.value);
             setLastUpdatedAt(moment(row.last_updated_at));
           }
         },
