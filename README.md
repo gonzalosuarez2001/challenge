@@ -52,7 +52,7 @@ npm run up
 - Registra el cron de reset automático (pg_cron cada minuto)
 - Arranca Next.js en [http://localhost:3000](http://localhost:3000)
 
-### 4. Eliminar el entorno local
+### 4. Detener el entorno local
 
 ```bash
 npm run down
