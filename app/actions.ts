@@ -41,3 +41,13 @@ export async function decrementCounter(): Promise<CounterData> {
   revalidatePath("/");
   return serialize(updated);
 }
+
+export async function resetCounter(): Promise<CounterData> {
+  const updated = await prisma.counter.upsert({
+    where: { id: COUNTER_ID },
+    create: { id: COUNTER_ID, value: 0 },
+    update: { value: 0 },
+  });
+  revalidatePath("/");
+  return serialize(updated);
+}

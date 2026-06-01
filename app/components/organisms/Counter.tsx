@@ -3,12 +3,13 @@
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
   useTransition,
 } from "react";
 import { useTimer } from "react-timer-hook";
 import { createBrowserClient } from "@/lib/supabase/client";
-import { incrementCounter, decrementCounter } from "@/app/actions";
+import { incrementCounter, decrementCounter, resetCounter } from "@/app/actions";
 import { RESET_TIMEOUT_SECONDS } from "@/lib/constants";
 import type { CounterData } from "@/lib/types";
 import CounterButton from "@/app/components/atoms/CounterButton";
@@ -25,11 +26,26 @@ export default function Counter({ initial }: { initial: CounterData }) {
   const [isMounted, setIsMounted] = useState(false);
   const [optimisticValue, setOptimisticValue] = useState(initial.value);
 
+  const onExpireRef = useRef<() => void>(() => {});
+  
+  onExpireRef.current = () => {
+    if (optimisticValue === 0) return;
+    setOptimisticValue(0);
+    startTransition(async () => {
+      try {
+        await resetCounter();
+      } catch {
+        setOptimisticValue(counterValue);
+      }
+    });
+  };
+
   const expiryTimestamp = lastUpdatedAt.clone().add(20, "minutes").toDate();
 
   const { minutes, seconds, restart } = useTimer({
     expiryTimestamp,
     autoStart: true,
+    onExpire: () => onExpireRef.current(),
   });
 
   const remainingSeconds = minutes * 60 + seconds;
