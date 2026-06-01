@@ -13,7 +13,7 @@ El valor del contador es global: se comparte entre todas las sesiones abiertas y
 | Base de datos | PostgreSQL via Supabase |
 | ORM | Prisma 7 |
 | Tiempo real | Supabase Realtime |
-| Reset automático | Vercel Cron Jobs |
+| Reset automático | Supabase Cron Job |
 | Estilos | Tailwind CSS |
 | Deploy | Vercel |
 
